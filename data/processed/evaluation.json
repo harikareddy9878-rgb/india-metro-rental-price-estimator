@@ -1,0 +1,10 @@
+{
+  "rows": 960,
+  "train_rows": 748,
+  "test_rows": 212,
+  "mae_inr": 4677.0,
+  "rmse_inr": 6040.0,
+  "r2": 0.816,
+  "p10_p90_coverage": 0.689,
+  "median_interval_width_inr": 11914.0
+}
