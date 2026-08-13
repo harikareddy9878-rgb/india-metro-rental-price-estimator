@@ -1,39 +1,58 @@
-# Bengaluru Rent Estimator
+# Indian Metro Rental Price Estimator
 
-This machine learning project estimates the monthly asking rent of a Bengaluru home from its locality, size, furnishing, property age, and distance to the nearest metro station. It also reports an uncertainty range so the prediction is not presented as an exact market value.
+This project estimates monthly asking rent across Bangalore, New Delhi, Mumbai, Pune, and Nagpur. It uses 21,691 raw rental listings from two MIT licensed Kaggle datasets, applies data quality rules, trains a gradient boosting model, and calibrates a practical prediction interval on a separate validation split.
 
 ![Model evaluation](evidence/model_evaluation.png)
 
-## Problem
+## Project question
 
-Rental listings are difficult to compare because locality, floor area, furnishing, and access to transport affect price at the same time. A simple city-wide average hides these differences.
+Can a rental model improve on a simple city median while remaining honest about noisy listing data and uncertainty?
 
-## Root cause addressed
+## Result
 
-The main cause of inconsistent comparisons is that similar homes are not grouped by the same features. The project creates a repeatable feature pipeline and evaluates predictions on a held-out test set.
+| Measure | Result |
+| --- | ---: |
+| Raw source rows | 21,691 |
+| Clean model rows | 12,201 |
+| Cities | 5 |
+| Localities | 2,102 |
+| Held out test rows | 1,831 |
+| Model MAE | ₹11,652 |
+| City median baseline MAE | ₹22,122 |
+| R² | 0.685 |
+| 90% interval coverage | 89.7% |
 
-## Purpose
+The model cuts MAE by 47.3% relative to the city median baseline. Performance varies by city, so the project publishes city-level error instead of hiding every listing behind one overall score.
 
-The estimator is an educational model for comparing listings. It is not a valuation service and should not be used as the only basis for a rental agreement.
+## Data work
 
-## Model results
+The acquisition script downloads [India House Rent Prediction](https://www.kaggle.com/datasets/pranavshinde36/india-house-rent-prediction) and [New Delhi Rental Properties](https://www.kaggle.com/datasets/divyanshug40/data-for-houses-available-for-rent). Both dataset pages state an MIT licence.
 
-Run `python src/train.py` to reproduce the current MAE, RMSE, R², and interval coverage. The evaluation image and JSON report are generated from the same test predictions.
+The pipeline standardises fields from different schemas, removes impossible area and rent values, rejects incomplete targets, and removes exact listing signatures. The raw combined file remains separate from the model table. Source metadata and filtering counts are recorded in `data/raw/source_manifest.json`.
 
-## Data statement
+## Modelling approach
 
-The committed dataset is a deterministic synthetic sample modelled on common Bengaluru rental listing fields. It contains no scraped personal information and makes no claim to represent the current market. The generation assumptions are documented in `docs/data_card.md`.
+Categorical values use an ordinal encoder that handles unseen values. Numeric gaps use median imputation. A histogram gradient boosting regressor learns nonlinear relationships using city, locality, property type, furnishing, seller type, bedrooms, bathrooms, balconies, and area.
+
+The split is 70% training, 15% interval calibration, and 15% final testing. The test set is not used to train the model or select the interval radius.
+
+## Responsible use
+
+The target is asking rent, not a signed lease value. Listings may be duplicated across platforms, stale, negotiated, or incorrectly entered. The model does not use exact address, building condition, maintenance charge, deposit, or current availability. It is an educational comparison tool, not a rental valuation service.
 
 ## Repository guide
 
-| Folder | Contents |
+| Path | Contents |
 | --- | --- |
-| `data` | Generated listing sample and train/test outputs |
-| `src` | Data generation, training, evaluation, and prediction code |
-| `models` | Serialized model artifact after training |
-| `evidence` | Evaluation charts |
-| `reports` | Detailed PDF project report |
-| `tests` | Feature and prediction checks |
+| `scripts/acquire_data.py` | Reproducible downloads, schema alignment, filtering, and deduplication |
+| `src/train.py` | Train, calibrate, evaluate, and create visual evidence |
+| `src/predict.py` | Load the saved model and return a prediction interval |
+| `data/processed` | Clean model table, evaluation JSON, and source audit counts |
+| `evidence` | Evaluation dashboard used in this README and report |
+| `reports` | Detailed project report in PDF format |
+| `tests` | Data rules and unseen-category inference checks |
+
+[Read the ten page project report](reports/Indian_Metro_Rental_Price_Estimator_Report.pdf)
 
 ## Reproduce
 
@@ -41,7 +60,7 @@ The committed dataset is a deterministic synthetic sample modelled on common Ben
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python src/generate_data.py
+python scripts/acquire_data.py
 python src/train.py
 python scripts/build_report.py
 pytest
@@ -51,4 +70,3 @@ ruff check src scripts tests
 ## Author
 
 Harika
-

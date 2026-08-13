@@ -1,21 +1,49 @@
-from src.generate_data import generate_rows
-from src.train import build_model
+import pandas as pd
+
+from scripts.acquire_data import deduplicate, valid
+from src.train import FEATURES, build_model
 
 
-def test_generation_is_repeatable():
-    assert generate_rows(3, seed=7) == generate_rows(3, seed=7)
+def test_invalid_extreme_listing_is_rejected():
+    row = {"monthly_rent_inr": 8_000_000, "area_sqft": 900, "beds": 2}
+    assert not valid(row)
 
 
-def test_generated_values_are_valid():
-    rows = generate_rows(30)
-    assert all(row["monthly_rent_inr"] >= 7000 for row in rows)
-    assert all(row["sqft"] >= 350 for row in rows)
+def test_duplicate_signature_is_removed():
+    row = {
+        "city": "Bangalore",
+        "locality": "Whitefield",
+        "property_type": "2 BHK Flat",
+        "beds": 2,
+        "bathrooms": 2,
+        "area_sqft": 1000,
+        "monthly_rent_inr": 32000,
+    }
+    clean, removed = deduplicate([row, row.copy()])
+    assert len(clean) == 1
+    assert removed == 1
 
 
 def test_model_accepts_unseen_locality():
+    records = []
+    for index in range(40):
+        records.append(
+            {
+                "source": "Test",
+                "city": "Bangalore" if index % 2 else "New Delhi",
+                "locality": "Whitefield" if index % 3 else "Dwarka",
+                "property_type": "2 BHK Flat",
+                "furnishing": "Semi-Furnished",
+                "seller_type": "Owner",
+                "beds": 2,
+                "bathrooms": 2,
+                "balconies": 1,
+                "area_sqft": 800 + index * 10,
+            }
+        )
+    frame = pd.DataFrame(records)
     model = build_model()
-    x = [{"locality": "Whitefield", "furnishing": "Unfurnished", "bhk": 1, "sqft": 500, "bathrooms": 1, "property_age_years": 2, "metro_distance_km": 1.5, "parking": 0, "gated_community": 0}, {"locality": "Jayanagar", "furnishing": "Fully Furnished", "bhk": 3, "sqft": 1400, "bathrooms": 3, "property_age_years": 8, "metro_distance_km": 0.8, "parking": 1, "gated_community": 1}, {"locality": "Hebbal", "furnishing": "Semi Furnished", "bhk": 2, "sqft": 900, "bathrooms": 2, "property_age_years": 5, "metro_distance_km": 2.0, "parking": 1, "gated_community": 1}, {"locality": "Kengeri", "furnishing": "Unfurnished", "bhk": 2, "sqft": 800, "bathrooms": 1, "property_age_years": 10, "metro_distance_km": 4.0, "parking": 0, "gated_community": 0}]
-    model.fit(x, [12000, 52000, 28000, 15000])
-    prediction = model.predict([{**x[0], "locality": "Unseen Layout"}])
-    assert prediction[0] > 0
-
+    model.fit(frame[FEATURES], [10.0 + index / 100 for index in range(40)])
+    candidate = frame.iloc[[0]].copy()
+    candidate.loc[:, "locality"] = "Unseen Layout"
+    assert model.predict(candidate[FEATURES])[0] > 0

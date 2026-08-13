@@ -1,0 +1,23 @@
+{
+  "raw_rows": 21691,
+  "valid_rows_before_deduplication": 13893,
+  "model_rows": 12201,
+  "invalid_rows_removed": 7798,
+  "duplicate_rows_removed": 1692,
+  "sources": [
+    {
+      "name": "India House Rent Prediction",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/pranavshinde36/india-house-rent-prediction",
+      "page": "https://www.kaggle.com/datasets/pranavshinde36/india-house-rent-prediction",
+      "license": "MIT",
+      "file": "data.csv"
+    },
+    {
+      "name": "New Delhi Rental Properties",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/divyanshug40/data-for-houses-available-for-rent",
+      "page": "https://www.kaggle.com/datasets/divyanshug40/data-for-houses-available-for-rent",
+      "license": "MIT",
+      "file": "Makaan_data_700pages.csv"
+    }
+  ]
+}

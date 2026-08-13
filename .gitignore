@@ -4,4 +4,6 @@ __pycache__/
 .ruff_cache/
 *.pyc
 models/*.joblib
-
+data/source/
+data/raw/india_rental_listings.csv
+data/processed/model_input.csv

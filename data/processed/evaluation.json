@@ -1,10 +1,37 @@
 {
-  "rows": 960,
-  "train_rows": 748,
-  "test_rows": 212,
-  "mae_inr": 4677.0,
-  "rmse_inr": 6040.0,
-  "r2": 0.816,
-  "p10_p90_coverage": 0.689,
-  "median_interval_width_inr": 11914.0
+  "raw_rows": 21691,
+  "model_rows": 12201,
+  "train_rows": 8540,
+  "calibration_rows": 1830,
+  "test_rows": 1831,
+  "cities": 5,
+  "localities": 2102,
+  "mae_inr": 11652,
+  "rmse_inr": 22696,
+  "r2": 0.685,
+  "city_median_baseline_mae_inr": 22122,
+  "interval_radius_inr": 26637,
+  "interval_coverage": 0.897,
+  "by_city": {
+    "Bangalore": {
+      "rows": 263,
+      "mae_inr": 21681
+    },
+    "Mumbai": {
+      "rows": 241,
+      "mae_inr": 21784
+    },
+    "Nagpur": {
+      "rows": 88,
+      "mae_inr": 8304
+    },
+    "New Delhi": {
+      "rows": 974,
+      "mae_inr": 7440
+    },
+    "Pune": {
+      "rows": 265,
+      "mae_inr": 9072
+    }
+  }
 }

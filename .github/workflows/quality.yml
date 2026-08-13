@@ -13,8 +13,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python src/generate_data.py
+      - run: python scripts/acquire_data.py
       - run: python src/train.py
       - run: pytest
       - run: ruff check src scripts tests
-
