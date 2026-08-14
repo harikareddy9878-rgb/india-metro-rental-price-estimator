@@ -1,4 +1,4 @@
-"""Train and evaluate an Indian metro rental price estimator."""
+"""Train and evaluate the MetroRent price estimator."""
 
 from __future__ import annotations
 

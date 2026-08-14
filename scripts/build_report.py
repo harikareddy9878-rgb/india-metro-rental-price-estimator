@@ -1,4 +1,4 @@
-"""Create a ten page report for the Indian metro rental estimator."""
+"""Create the ten-page MetroRent project report."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from reportlab.lib.units import cm
 from reportlab.platypus import Image, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "reports/Indian_Metro_Rental_Price_Estimator_Report.pdf"
+OUTPUT = ROOT / "reports/MetroRent_Price_Estimator_Report.pdf"
 INK = colors.HexColor("#223149")
 RUST = colors.HexColor("#bd563d")
 PALE = colors.HexColor("#f3eee8")
@@ -23,7 +23,7 @@ def footer(canvas, document):
     canvas.saveState()
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(colors.HexColor("#68717d"))
-    canvas.drawString(2 * cm, 1.1 * cm, "Indian Metro Rental Price Estimator")
+    canvas.drawString(2 * cm, 1.1 * cm, "MetroRent Price Estimator")
     canvas.drawRightString(19 * cm, 1.1 * cm, f"Page {document.page}")
     canvas.restoreState()
 
@@ -36,11 +36,11 @@ def build_report() -> Path:
     styles.add(ParagraphStyle(name="Section", parent=styles["Heading1"], fontSize=19, leading=24, textColor=INK, spaceAfter=13))
     styles.add(ParagraphStyle(name="Sub", parent=styles["Heading2"], fontSize=12, leading=16, textColor=RUST, spaceBefore=8, spaceAfter=5))
     styles.add(ParagraphStyle(name="BodyR", parent=styles["BodyText"], fontSize=10, leading=15, textColor=colors.HexColor("#353b44"), spaceAfter=9))
-    doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=1.8 * cm, bottomMargin=1.8 * cm, title="Indian Metro Rental Price Estimator", author="Harika")
+    doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm, topMargin=1.8 * cm, bottomMargin=1.8 * cm, title="MetroRent Price Estimator", author="Harika")
     story = []
     table_style = TableStyle([("BACKGROUND", (0, 0), (-1, 0), INK), ("TEXTCOLOR", (0, 0), (-1, 0), colors.white), ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#d7cec4")), ("VALIGN", (0, 0), (-1, -1), "TOP"), ("PADDING", (0, 0), (-1, -1), 7)])
 
-    story.extend([Spacer(1, 3.1 * cm), Paragraph("Indian Metro Rental<br/>Price Estimator", styles["CoverTitle"]), Paragraph("Real listing preparation, baseline comparison, and calibrated uncertainty", ParagraphStyle(name="CoverSub", parent=styles["BodyR"], fontSize=14, leading=20, textColor=RUST, alignment=TA_CENTER)), Spacer(1, 1.2 * cm), Table([["Project type", "Applied machine learning"], ["Coverage", "Bangalore, New Delhi, Mumbai, Pune, and Nagpur"], ["Raw listings", f"{metrics['raw_rows']:,}"], ["Prepared by", "Harika"]], colWidths=[4 * cm, 9 * cm], style=TableStyle([("BACKGROUND", (0, 0), (0, -1), PALE), ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"), ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#d7cec4")), ("PADDING", (0, 0), (-1, -1), 9)])), PageBreak()])
+    story.extend([Spacer(1, 3.1 * cm), Paragraph("MetroRent<br/>Price Estimator", styles["CoverTitle"]), Paragraph("Real listing preparation, baseline comparison, and calibrated uncertainty", ParagraphStyle(name="CoverSub", parent=styles["BodyR"], fontSize=14, leading=20, textColor=RUST, alignment=TA_CENTER)), Spacer(1, 1.2 * cm), Table([["Project type", "Applied machine learning"], ["Coverage", "Bangalore, New Delhi, Mumbai, Pune, and Nagpur"], ["Raw listings", f"{metrics['raw_rows']:,}"], ["Prepared by", "Harika"]], colWidths=[4 * cm, 9 * cm], style=TableStyle([("BACKGROUND", (0, 0), (0, -1), PALE), ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"), ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#d7cec4")), ("PADDING", (0, 0), (-1, -1), 9)])), PageBreak()])
 
     pages = [
         ("1. Executive summary", [f"Two licensed Indian rental datasets contribute {metrics['raw_rows']:,} raw listings. After validity rules and exact signature deduplication, {metrics['model_rows']:,} rows remain for modelling.", f"The held-out MAE is INR {metrics['mae_inr']:,}, compared with INR {metrics['city_median_baseline_mae_inr']:,} for a city-median baseline. The model R2 is {metrics['r2']:.3f}.", f"A separate calibration split produces a plus or minus INR {metrics['interval_radius_inr']:,} interval with {metrics['interval_coverage']:.1%} coverage on the final test set."]),

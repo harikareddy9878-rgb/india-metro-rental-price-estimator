@@ -1,4 +1,4 @@
-# Indian Metro Rental Price Estimator
+# MetroRent Price Estimator
 
 This project estimates monthly asking rent across Bangalore, New Delhi, Mumbai, Pune, and Nagpur. It uses 21,691 raw rental listings from two MIT licensed Kaggle datasets, applies data quality rules, trains a gradient boosting model, and calibrates a practical prediction interval on a separate validation split.
 
@@ -52,7 +52,7 @@ The target is asking rent, not a signed lease value. Listings may be duplicated 
 | `reports` | Detailed project report in PDF format |
 | `tests` | Data rules and unseen-category inference checks |
 
-[Read the ten page project report](reports/Indian_Metro_Rental_Price_Estimator_Report.pdf)
+[Read the ten-page project report](reports/MetroRent_Price_Estimator_Report.pdf)
 
 ## Reproduce
 
