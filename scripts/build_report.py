@@ -6,7 +6,7 @@ from pathlib import Path
 from report_template import build_research_report
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "reports/MetroRent_Price_Estimator_Report.pdf"
+OUTPUT = ROOT / "reports/MetroRent_Report.pdf"
 FIGURES = ROOT / "reports/figures"
 
 
@@ -17,7 +17,7 @@ def build_report() -> Path:
             "title": "Project overview and problem statement",
             "paragraphs": [
                 "MetroRent estimates monthly asking rent for listings across Bangalore, Mumbai, Nagpur, New Delhi, and Pune. I built the project because city averages cannot represent the interaction between locality, property size, bedrooms, bathrooms, furnishing, and property type.",
-                "The project tests whether a reproducible model improves on a transparent city-median baseline and whether a separate calibration split can produce a useful uncertainty interval. It is an educational listing-comparison tool, not a formal valuation or negotiation instruction.",
+                "The project tests whether a reproducible model improves on a transparent city-median baseline and whether a separate calibration split can produce a useful uncertainty interval. It is a listing-comparison model, not a formal valuation or negotiation instruction.",
             ],
         },
         {
@@ -40,6 +40,48 @@ def build_report() -> Path:
             "paragraphs": [
                 "The model combines numerical and categorical listing attributes in a scikit-learn pipeline and trains a gradient-boosting regressor. A city-median predictor is the required baseline. Model selection and fitting are separated from final test evaluation.",
                 "A conformal-style interval radius is estimated from absolute calibration errors and applied unchanged to the test set. I report MAE, RMSE, R-squared, interval coverage, and city-level error.",
+            ],
+        },
+        {
+            "title": "End-to-end model architecture",
+            "paragraphs": [
+                "The architecture separates source alignment, preparation, data splitting, model fitting and verification. Python and pandas resolve the two source schemas and remove invalid or duplicate listings before scikit-learn receives the modelling table.",
+                "Training, calibration and test rows remain distinct. The saved estimator returns a point estimate and a calibrated interval, while evaluation JSON and figures preserve the baseline, city-level error and coverage results used in the report.",
+            ],
+            "figure": FIGURES / "06_architecture.png",
+            "caption": "Architecture diagram. MetroRent source, preparation, model and evaluation stages.",
+            "explanation": [
+                ["Stage design", "Every stage names the technology and the artefact handed to the next stage."],
+                ["Leakage control", "The calibration and test partitions are not reused for model fitting."],
+                ["Output", "The prediction interface returns a rent estimate with an interval rather than presenting false precision."],
+            ],
+        },
+        {
+            "title": "Automated model test execution",
+            "paragraphs": [
+                "I ran the current repository test suite after updating the report. Three tests passed. The checks cover prepared-data rules, saved-model inference and ordering of the lower estimate, point estimate and upper estimate for an unseen listing.",
+                "The tests complement model metrics. MAE describes predictive error across the holdout, while the test suite verifies software behaviour and asset contracts that a single score cannot detect.",
+            ],
+            "figure": FIGURES / "07_test_execution.png",
+            "caption": "Test execution evidence. Actual MetroRent pytest execution for data and prediction contracts.",
+            "explanation": [
+                ["Execution", "Three tests completed successfully in 2.38 seconds."],
+                ["Scenarios", "The suite includes valid inference and interval ordering, not only file-existence checks."],
+                ["Boundary", "Distribution shift and housing-market changes require future monitoring beyond unit tests."],
+            ],
+        },
+        {
+            "title": "Evaluation dashboard and decision interpretation",
+            "paragraphs": [
+                "The evaluation dashboard combines the model-versus-baseline comparison, city errors and prediction interval evidence. It allows the headline MAE to be interpreted beside the large differences between metro markets.",
+                "The dashboard is not a rental valuation service. Its purpose is to make model performance, uncertainty and data scope visible before a user considers an individual estimate.",
+            ],
+            "figure": ROOT / "evidence/model_evaluation.png",
+            "caption": "Evaluation dashboard. MetroRent baseline, city and interval results.",
+            "explanation": [
+                ["Question", "Does the selected model improve on a transparent baseline while maintaining useful interval coverage?"],
+                ["Observed result", "The model reduces MAE from INR 22,122 to INR 11,652 and the interval covers 89.7 percent of test rents."],
+                ["Decision use", "City-level error remains visible so the aggregate improvement is not interpreted as equal performance everywhere."],
             ],
         },
         {

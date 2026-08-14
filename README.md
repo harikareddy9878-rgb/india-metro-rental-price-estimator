@@ -38,7 +38,7 @@ The split is 70% training, 15% interval calibration, and 15% final testing. The 
 
 ## Responsible use
 
-The target is asking rent, not a signed lease value. Listings may be duplicated across platforms, stale, negotiated, or incorrectly entered. The model does not use exact address, building condition, maintenance charge, deposit, or current availability. It is an educational comparison tool, not a rental valuation service.
+The target is asking rent, not a signed lease value. Listings may be duplicated across platforms, stale, negotiated, or incorrectly entered. The model does not use exact address, building condition, maintenance charge, deposit, or current availability. It is an exploratory comparison model, not a rental valuation service.
 
 ## Repository guide
 
@@ -52,9 +52,9 @@ The target is asking rent, not a signed lease value. Listings may be duplicated 
 | `reports` | Detailed project report in PDF format |
 | `tests` | Data rules and unseen-category inference checks |
 
-[Read the research-style project report](reports/MetroRent_Price_Estimator_Report.pdf)
+[Read the project report](reports/MetroRent_Report.pdf)
 
-The report is a plain research-style document with an abstract, methodology, five explained evaluation figures, limitations, reproducibility notes, and conclusion.
+The report documents source preparation, leakage controls, baseline comparison, city-level errors and the calibrated prediction interval.
 
 ## Reproduce
 
