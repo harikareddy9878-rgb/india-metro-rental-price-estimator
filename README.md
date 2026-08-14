@@ -52,7 +52,9 @@ The target is asking rent, not a signed lease value. Listings may be duplicated 
 | `reports` | Detailed project report in PDF format |
 | `tests` | Data rules and unseen-category inference checks |
 
-[Read the ten-page project report](reports/MetroRent_Price_Estimator_Report.pdf)
+[Read the research-style project report](reports/MetroRent_Price_Estimator_Report.pdf)
+
+The report is a plain research-style document with an abstract, methodology, five explained evaluation figures, limitations, reproducibility notes, and conclusion.
 
 ## Reproduce
 
